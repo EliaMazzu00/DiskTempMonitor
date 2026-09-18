@@ -1,0 +1,7 @@
+root = true
+
+[*.cs]
+# L'interfaccia è costruita interamente a codice: nessun file .Designer.cs e nessun
+# uso del designer di Visual Studio. La regola che pretende gli attributi di
+# serializzazione sulle proprietà dei controlli personalizzati non si applica.
+dotnet_diagnostic.WFO1000.severity = none

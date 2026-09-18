@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows10.0.19041.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>DiskTempMonitor</AssemblyName>
+    <RootNamespace>DiskTempMonitor</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Version>1.7.1</Version>
+    <Product>Disk Temp Monitor</Product>
+    <Company>Disk Temp Monitor</Company>
+    <Description>Monitor seriali e temperature dei dischi con icone in area di notifica</Description>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <SelfContained>false</SelfContained>
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Versione 0.9.4 e non la piÃ¹ recente: dalla 0.9.5 la libreria non porta piÃ¹ il
+      driver di lettura dei registri, e si appoggia a PawnIO, che l'utente dovrebbe
+      installare a parte. La 0.9.4 lo incorpora come risorsa e lo carica da sola, quindi
+      l'applicazione resta autosufficiente: nessun programma nÃ© driver da installare.
+    -->
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.4" />
+  </ItemGroup>
+
+  <!--
+    Incide l'ora di compilazione nella versione informativa, che diventa per esempio
+    "1.1.0+2026-09-14T19:04". La barra di stato la mostra, cosÃ¬ si riconosce a colpo
+    d'occhio se la copia in esecuzione Ã¨ quella appena prodotta.
+  -->
+  <Target Name="MarcaOraDiCompilazione" BeforeTargets="GetAssemblyVersion">
+    <PropertyGroup>
+      <InformationalVersion>$(Version)+$([System.DateTime]::Now.ToString('yyyy-MM-ddTHH:mm:ss'))</InformationalVersion>
+    </PropertyGroup>
+  </Target>
+
+</Project>
+
