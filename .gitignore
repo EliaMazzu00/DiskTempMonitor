@@ -11,3 +11,7 @@ publish/
 
 # Local artefacts
 *.log
+
+# Installer
+installer/stage/
+installer/Output/

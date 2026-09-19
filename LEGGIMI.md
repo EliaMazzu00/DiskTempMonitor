@@ -14,6 +14,22 @@ Applicazione Windows Forms (.NET 9) divisa in tre schede:
 Non serve installare né tenere aperto nient'altro: l'applicazione parla da sola con i
 dischi e si porta dietro il driver che serve a leggere i sensori del processore.
 
+## Installazione
+
+`installer\Output\DiskTempMonitor-<versione>-setup.exe` è una procedura guidata che mette
+il programma dove Windows si aspetta di trovarlo: in *Programmi*, con la voce nel menu
+Start (quindi ricercabile digitando il nome), il collegamento sul desktop, l'avvio
+automatico se lo si spunta e la disinstallazione da *Impostazioni → App → App installate*.
+
+Il pacchetto è self-contained: si porta dietro il runtime .NET, quindi non c'è nessun
+prerequisito da installare prima. Non essendo firmato, al primo avvio SmartScreen mostra
+"Windows ha protetto il PC": si prosegue con *Ulteriori informazioni → Esegui comunque*.
+
+Come si produce il pacchetto, e perché l'avvio automatico passa dall'Utilità di
+pianificazione, sta in **[installer/LEGGIMI-installer.md](installer/LEGGIMI-installer.md)**.
+
+In alternativa l'eseguibile pubblicato funziona anche così com'è, da qualunque cartella.
+
 ## Avvio
 
 Eseguibile singolo (richiede il .NET 9 Desktop Runtime, già presente su questo PC).
@@ -807,6 +823,10 @@ amministratore crea un'attività pianificata con privilegi elevati (nessun promp
 login), altrimenti usa la chiave `Run` del registro. In entrambi i casi parte con `--tray`,
 cioè direttamente in area di notifica.
 
+La procedura guidata di installazione offre la stessa cosa come casella da spuntare, e crea
+l'attività con lo stesso nome: attivarla di là o di qua è indifferente, e la si può sempre
+togliere dalle impostazioni.
+
 ## File
 
 ```
@@ -878,4 +898,10 @@ Impostazioni e log errori: `%AppData%\DiskTempMonitor\`
 
 ```bash
 cd C:\Users\elia.mazzuchelli\Downloads\DiskTempMonitor && dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o publish
+```
+
+Per rigenerare anche la procedura guidata di installazione:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File installer\build.ps1
 ```

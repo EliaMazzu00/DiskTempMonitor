@@ -95,13 +95,21 @@ internal static class WindowsToast
 
     private static void EnsureStartMenuShortcut()
     {
+        string exe = Environment.ProcessPath ?? Path.Combine(AppContext.BaseDirectory, "DiskTempMonitor.exe");
+
+        // Il collegamento per tutti gli utenti lo crea l'installer. Se c'è e punta a
+        // questo eseguibile basta quello: crearne un secondo nel menu Start personale
+        // farebbe comparire la voce due volte nella ricerca di Windows.
+        string common = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.CommonPrograms), ShortcutName);
+        if (File.Exists(common) && ShortcutTargetsExe(common, exe)) return;
+
         string folder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "Microsoft", "Windows", "Start Menu", "Programs");
         Directory.CreateDirectory(folder);
 
         string path = Path.Combine(folder, ShortcutName);
-        string exe = Environment.ProcessPath ?? Path.Combine(AppContext.BaseDirectory, "DiskTempMonitor.exe");
 
         // Se esiste già e punta all'eseguibile giusto non si tocca: riscriverlo a ogni
         // avvio farebbe perdere a Windows le impostazioni di notifica dell'utente.

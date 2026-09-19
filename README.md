@@ -62,10 +62,27 @@ startup and removed on exit), so there is nothing to install. If Windows **Core 
 or an antivirus blocks that driver, the app says so rather than showing blanks, and falls
 back to Core Temp's shared memory when Core Temp happens to be installed.
 
+## Installing
+
+Run `installer\Output\DiskTempMonitor-<version>-setup.exe`: a wizard that installs the
+program the way Windows expects — under *Program Files*, with a Start menu entry (so it
+shows up in search), an optional desktop shortcut, optional start with Windows, and an
+entry in *Settings → Apps → Installed apps* for removing it again.
+
+The package is self-contained — it carries the .NET runtime — so nothing has to be
+installed first. It is not code-signed, so SmartScreen shows "Windows protected your PC"
+the first time; continue with *More info → Run anyway*.
+
+Building the installer, and why "start with Windows" goes through the Task Scheduler, is in
+[installer/LEGGIMI-installer.md](installer/LEGGIMI-installer.md) (Italian).
+
+The published executable also runs as-is from any folder, with no installation.
+
 ## Requirements
 
 - Windows 10 (build 19041) or later
-- [.NET 9 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [.NET 9 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0) — only for the
+  plain executable; the installer package needs no runtime
 - **Administrator rights.** The manifest requests elevation (`requireAdministrator`):
   without it, SATA drives and drives behind USB bridges report neither temperature nor
   attributes, because S.M.A.R.T. commands to the storage driver are privileged.
@@ -102,6 +119,12 @@ Settings and error logs live in `%AppData%\DiskTempMonitor\`.
 dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o publish
 ```
 
+And the installer, self-contained, from the same sources:
+
+```
+powershell -ExecutionPolicy Bypass -File installer\build.ps1
+```
+
 The build stamps the compile time into the informational version (`1.7.1+2026-09-18T16:24`),
 which the status bar shows — handy for telling at a glance whether the running copy is the
 one you just built.
@@ -114,6 +137,7 @@ Native/               P/Invoke, IOCTL codes, ATA commands
 Models/               DiskInfo, SmartAttribute, health states
 Services/             storage protocols, sensors, settings, notifications, self-tests
 UI/                   WinForms views, custom-drawn controls, theme, tray, overlay
+installer/            Inno Setup wizard script and its build script
 ```
 
 Most WinForms controls are drawn by hand (`UI/Controls.cs`): `DropDownList` combo boxes,
